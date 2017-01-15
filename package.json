@@ -1,0 +1,42 @@
+{
+  "name": "domainer",
+  "version": "2.0.0",
+  "description": "An Object Graph Mapper for GraphQL",
+  "main": "build/index.js",
+  "files": [
+    "build"
+  ],
+  "keywords": [
+    "graphql",
+    "object",
+    "graph",
+    "mapping",
+    "mapper",
+    "ogm"
+  ],
+  "scripts": {
+    "test": "mocha tests/*.spec.js --require config/mocha.js --compilers js:babel-core/register",
+    "lint": "eslint plugin",
+    "prepublish": "babel -d build/ package/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Quadric/graph-object.git"
+  },
+  "author": "Victor Duarte (Quadric ApS) <contact@quadric.net>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Quadric/graph-object/issues"
+  },
+  "homepage": "https://github.com/Quadric/graph-object#readme",
+  "devDependencies": {
+    "babel-cli": "6.x.x",
+    "babel-core": "^6.14.0",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-stage-2": "^6.13.0"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.11.6"
+  }
+}
