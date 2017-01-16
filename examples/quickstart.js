@@ -9,11 +9,12 @@ import { Mongo } from 'domainer/connectors';
 const connector = new Mongo({ uri: 'XXX:YY' });
 const domain = new Domainer({ models, connector });
 
-export {
-  ...domain.models,
-};
+// export {
+//   ...domain.models,
+// };
+// export default domain.models;
 
-export default domain.models;
+module.exports = domain;
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // /
 
