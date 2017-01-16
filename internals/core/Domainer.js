@@ -1,10 +1,18 @@
 import Context from './Context';
 import proxy from './proxy';
 
+if (typeof Proxy === 'undefined') {
+  require('proxy-polyfill');
+}
+
 export default class Domainer {
   constructor({ models, connectors }) {
+    if (!models) {
+      throw new Error('You must define the `models` of the domain.');
+    }
+
     this._store = {
-      models: {},
+      models,
       middleware: [],
     };
   }
@@ -15,6 +23,8 @@ export default class Domainer {
     for (const name of Object.keys(this._store.models)) {
       models[name] = new Proxy(this._store.models[name], proxy(this, null));
     }
+
+    return models;
   }
 
   // proxyGetter(target, name) {

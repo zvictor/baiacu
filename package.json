@@ -39,7 +39,8 @@
   },
   "dependencies": {
     "babel-plugin-transform-export-extensions": "^6.8.0",
-    "babel-runtime": "^6.11.6"
+    "babel-runtime": "^6.11.6",
+    "proxy-polyfill": "^0.1.6"
   },
   "ava": {
     "require": [
