@@ -1,7 +1,7 @@
-export default class Model {
-  constructor(object) {
-    this._store = {
-      ...object,
-    };
-  }
-}
+// export default class Model {
+//   constructor(object) {
+//     this._store = {
+//       ...object,
+//     };
+//   }
+// }

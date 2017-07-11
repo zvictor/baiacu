@@ -1,30 +1,43 @@
 import Context from './Context';
-import proxy from './proxy';
+import { ClassProxy, ObjectProxy } from '../proxy';
+import { CLASS, INSTANCE, ATTRIBUTE } from './types';
 
 if (typeof Proxy === 'undefined') {
-  require('proxy-polyfill');
+  throw new Error(`Domainer requires the Proxy object. Please consider using the 'proxy-polyfill' package.`)
 }
 
 export default class Domainer {
   constructor({ models, connectors }) {
+    const proxies = {};
+    const middleware = [];
+
     if (!models) {
       throw new Error('You must define the `models` of the domain.');
     }
 
+    for (const name of Object.keys(models)) {
+      proxies[name] = new Proxy(models[name], ObjectProxy(middleware));
+    }
+
     this._store = {
-      models,
-      middleware: [],
+      middleware,
+      models: new Proxy(proxies, {
+        get: ClassProxy(middleware),
+      }),
     };
   }
 
   get models() {
-    const models = {}
-
-    for (const name of Object.keys(this._store.models)) {
-      models[name] = new Proxy(this._store.models[name], proxy(this, null));
-    }
-
-    return models;
+    // const models = {}
+    //
+    // for (const name of Object.keys(this._store.models)) {
+    //   models[name] = new Proxy(this._store.models[name], {
+    //     get: proxyHandler(this, CLASS).get,
+    //   });
+    // }
+    //
+    // return models;
+    return this._store.models;
   }
 
   // proxyGetter(target, name) {
@@ -34,17 +47,17 @@ export default class Domainer {
   // }
 
   use(middleware) {
-    if (typeof middleware !== 'function') {
-      throw new TypeError('middleware must be a function!');
-    }
+    // if (typeof middleware !== 'function') { // TODO! check if instanceof Transmutter/Middleware
+    //   throw new TypeError('middleware must be a function!');
+    // }
 
     this._store.middleware.push(middleware);
     return this;
   }
 
-  context(data) {
-    return new Context(this, data);
-  }
+  // context(data) {
+  //   return new Context(this, data);
+  // }
 }
 
 // resolve(next, root, args, context, info) {
