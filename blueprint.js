@@ -14,7 +14,14 @@ Plan B:
     method(source, property, response) {
       ...
       `response` começa como undefined e tem seu valor alterado pelo caminho
-        - o valor returnado pela funcao substituira `response`
+        - o valor retornado pela funcao substituira `response`
+    }
+  }
+
+Plan C:
+  class Transmutter {
+    method(source, property, response, proxy) {
+      ...
     }
   }
 

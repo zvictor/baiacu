@@ -1,5 +1,5 @@
 import test from 'ava';
-import Domainer, { Model } from '../internals';
+import Domainer from '../internals';
 import { IdentityTransmutter, SealerTransmutter } from '../internals/middleware';
 
 const A = 'A';

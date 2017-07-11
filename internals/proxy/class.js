@@ -5,8 +5,8 @@ export default middleware => (target, property, receiver) => {
     throw new TypeError('Middleware stack must be an array!')
   }
 
-  let source = Reflect.get(target, property, receiver);
-  let response;
+  // let source = Reflect.get(target, property, receiver);
+  const proxy = {};
 
   for (const transmutter of middleware) {
     // if (typeof transmutter !== 'function') { // TODO! check for instance of Transmutter/Middleware
@@ -18,8 +18,11 @@ export default middleware => (target, property, receiver) => {
       continue;
     }
 
-    response = method(source, response);
+    const response = method(target, property, proxy[property], proxy);
+    if (response !== undefined) {
+      proxy[property] = response;
+    }
   }
 
-  return response;
+  return proxy[property];
 }
