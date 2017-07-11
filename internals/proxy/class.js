@@ -6,7 +6,7 @@ export default middleware => (target, property, receiver) => {
   }
 
   let source = Reflect.get(target, property, receiver);
-  let response = source;
+  let response;
 
   for (const transmutter of middleware) {
     // if (typeof transmutter !== 'function') { // TODO! check for instance of Transmutter/Middleware

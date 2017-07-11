@@ -1,6 +1,6 @@
 import test from 'ava';
 import Domainer, { Model } from '../internals';
-import { SealerTransmutter } from '../internals/middleware';
+import { IdentityTransmutter, SealerTransmutter } from '../internals/middleware';
 
 const A = 'A';
 const B = 'B';
@@ -15,7 +15,8 @@ test('models can be changed without the SealerTransmutter', t => {
     models: {
       Whatever,
     },
-  });
+  })
+    .use(new IdentityTransmutter());
 
   const individual = new models.Whatever();
 
@@ -51,8 +52,9 @@ test('classes cannot be changed with the SealerTransmutter', t => {
       Whatever,
     },
   })
-  .use(new SealerTransmutter())
-  // .use(new Middleware());
+    .use(new IdentityTransmutter())
+    .use(new SealerTransmutter())
+    // .use(new Middleware());
 
   const individual = new models.Whatever();
 

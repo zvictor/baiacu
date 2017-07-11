@@ -17,7 +17,8 @@ export default (middleware) => {
       // let instance = Object.create(target.prototype);
       // instance = target.apply(instance, args);
 
-      let instance = Reflect.construct(target, args);
+      // let instance = Reflect.construct(target, args);
+      let instance;
 
       debugger;
       for (const transmutter of middleware) {
@@ -43,7 +44,8 @@ export default (middleware) => {
       }
       if (property === 'prototype') debugger;
 
-      let response = Reflect.get(target, property, receiver);
+      // let response = Reflect.get(target, property, receiver);
+      let response;
       // if (type === 'class') {
       //   console.log({target});
       //   console.log({property});

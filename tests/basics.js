@@ -1,5 +1,6 @@
 import test from 'ava';
 import Domainer from '../internals';
+import { IdentityTransmutter, SealerTransmutter } from '../internals/middleware';
 
 class Person {
   constructor({ firstName, lastName }) {
@@ -26,14 +27,13 @@ class Author extends Person {
   }
 }
 
-const domain = new Domainer({
+const { models } = new Domainer({
   models: {
     Person,
     Author,
   },
-});
-
-const { models } = domain;
+})
+.use(new IdentityTransmutter());
 
 test('has accessors/getters pointing to the original fields', t => {
   const individual = new models.Person({
