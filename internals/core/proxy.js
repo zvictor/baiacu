@@ -1,6 +1,6 @@
 import { INSTANCE, ATTRIBUTE } from '../core/types';
 
-export default (middleware) => {
+export default (middleware, type) => {
   if (!middleware) {
     throw new Error('missing `middleware`');
   }
@@ -60,7 +60,7 @@ export default (middleware) => {
         //   throw new TypeError('Middleware must be composed of functions!')
         // }
 
-        const method = transmutter[ATTRIBUTE];
+        const method = transmutter[type];
         if (typeof method !== 'function') {
           continue;
         }

@@ -1,6 +1,6 @@
 import Context from './Context';
-import { ClassProxy, ObjectProxy } from '../proxy';
-import { CLASS, INSTANCE, ATTRIBUTE } from './types';
+import proxyHandler from './proxy';
+import { CLASS, ATTRIBUTE } from './types';
 
 if (typeof Proxy === 'undefined') {
   throw new Error(`Domainer requires the Proxy object. Please consider using the 'proxy-polyfill' package.`)
@@ -16,14 +16,12 @@ export default class Domainer {
     }
 
     for (const name of Object.keys(models)) {
-      proxies[name] = new Proxy(models[name], ObjectProxy(middleware));
+      proxies[name] = new Proxy(models[name], proxyHandler(middleware, ATTRIBUTE));
     }
 
     this._store = {
       middleware,
-      models: new Proxy(proxies, {
-        get: ClassProxy(middleware),
-      }),
+      models: new Proxy(proxies, proxyHandler(middleware, CLASS)),
     };
   }
 
