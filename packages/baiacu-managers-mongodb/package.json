@@ -1,0 +1,28 @@
+{
+  "name": "baiacu-managers-mongodb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/baiacujs/baiacu.git"
+  },
+  "author": "Victor Duarte",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baiacujs/baiacu/issues"
+  },
+  "homepage": "https://github.com/baiacujs/baiacu#readme",
+  "ava": {
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
+  },
+  "dependencies": {
+    "mongodb": "^2.2.30"
+  }
+}
