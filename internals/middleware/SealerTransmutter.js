@@ -1,13 +1,22 @@
 export default class SealerTransmutter{
   class(source, property, response, proxy) {
-    Object.freeze(source[property]);
-    Object.freeze(source[property].prototype);
+    if (source[property]) {
+      Object.freeze(source[property]);
+
+      if (source[property].prototype) {
+        Object.freeze(source[property].prototype);
+      }
+    }
   }
 
-  // instance(source, args, response) {
-  //   Object.seal(response);
-  //   Object.seal(response.prototype);
-  //
-  //   return response;
-  // }
+  instance(source, response, args) {
+    Object.freeze(source);
+    Object.freeze(source.prototype);
+
+    if (response) {
+      return response;
+    }
+
+    return new source(...args);
+  }
 }

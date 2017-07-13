@@ -9,70 +9,103 @@ const D = 'D';
 const E = 'E';
 
 test('models can be changed without the SealerTransmutter', t => {
-  class Whatever {}
+  class Input {}
 
-  const { models } = new Domainer({
-    models: {
-      Whatever,
-    },
-  })
-    .use(new IdentityTransmutter());
+  const Output = new Domainer(Input)
+    .use(new IdentityTransmutter())
+    .export;
 
-  const individual = new models.Whatever();
+  const individual = new Output();
 
-  Whatever.A = A;
-  Whatever.prototype.B = B;
-  models.Whatever.C = C;
-  models.Whatever.prototype.D = D;
+  Input.A = A;
+  Input.prototype.B = B;
+  Output.C = C;
+  Output.prototype.D = D;
   individual.E = E;
 
-  t.is(Whatever.A, A);
-  t.is(Whatever.prototype.B, B);
-  t.is(models.Whatever.C, C);
-  t.is(models.Whatever.prototype.D, D);
+  t.is(Input.A, A);
+  t.is(Input.prototype.B, B);
+  t.is(Output.C, C);
+  t.is(Output.prototype.D, D);
   t.is(individual.E, E);
 });
 
-test('classes cannot be changed with the SealerTransmutter', t => {
-  class Whatever {}
+test('plain classes cannot be changed with the SealerTransmutter', t => {
+  class Input {}
 
   class Middleware {
     class(source, response) {
-      // console.log('booooa!!');
-      // console.log({source});
       source.A = A;
-      // source.prototype.B = B;
 
       return response;
     }
   }
 
-  const { models } = new Domainer({
-    models: {
-      Whatever,
-    },
+  const Output = new Domainer(Input)
+    .use(new IdentityTransmutter())
+    .use(new SealerTransmutter())
+    .export;
+
+  const individual = new Output();
+
+  t.is(Object.isFrozen(Input), true)
+
+  t.throws(() => {
+    Input.A = A;
+  });
+  t.throws(() => {
+    Input.prototype.B = B;
+  });
+  t.throws(() => {
+    Output.C = C;
+  });
+  t.throws(() => {
+    Output.prototype.D = D;
+  });
+
+
+  t.not(Input.A, A);
+  // t.not(Input.prototype.B, B);
+  // t.not(Output.C, C);
+  // t.not(Output.prototype.D, D);
+  // t.not(individual.E, E);
+});
+
+test('domain classes cannot be changed with the SealerTransmutter', t => {
+  class Input {}
+
+  class Middleware {
+    class(source, response) {
+      source.A = A;
+
+      return response;
+    }
+  }
+
+  const { Input: Output } = new Domainer({
+    Input,
   })
     .use(new IdentityTransmutter())
     .use(new SealerTransmutter())
-    // .use(new Middleware());
+    .export;
 
-  const individual = new models.Whatever();
+  const individual = new Output();
 
   t.throws(() => {
-    Whatever.A = A;
+    Input.A = A;
   });
   t.throws(() => {
-    Whatever.prototype.B = B;
+    Input.prototype.B = B;
   });
   t.throws(() => {
-    models.Whatever.C = C;
+    Output.C = C;
   });
   t.throws(() => {
-    models.Whatever.prototype.D = D;
+    Output.prototype.D = D;
   });
 
 
-  t.not(Whatever.A, A);
+  t.not(Input.A, A);
   // t.not(Whatever.prototype.B, B);
   // t.not(models.Whatever.C, C);
   // t.not(models.Whatever.prototype.D, D);

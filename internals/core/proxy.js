@@ -1,4 +1,4 @@
-import { INSTANCE, ATTRIBUTE } from '../core/types';
+import { INSTANCE } from '../core/types';
 
 export default (middleware, type) => {
   if (!middleware) {
@@ -6,37 +6,40 @@ export default (middleware, type) => {
   }
 
   return {
-    // construct(target, args) {
-    //   if (!Array.isArray(middleware)) {
-    //     throw new TypeError('Middleware stack must be an array!')
-    //   }
-    //
-    //   // let instance = target.prototype.apply(args); // TODO! use some sort of `apply`
-    //   // let instance = target.prototype.constructor.apply(target, args);
-    //
-    //   // let instance = Object.create(target.prototype);
-    //   // instance = target.apply(instance, args);
-    //
-    //   // let instance = Reflect.construct(target, args);
-    //   let response;
-    //
-    //   debugger;
-    //   for (const transmutter of middleware) {
-    //     // if (typeof transmutter !== 'function') { // TODO! check if instanceof Transmutter/Middleware
-    //     //   throw new TypeError('Middleware must be composed of functions!')
-    //     // }
-    //
-    //     const method = transmutter[INSTANCE];
-    //     if (typeof method !== 'function') {
-    //       continue;
-    //     }
-    //
-    //     method(target, response, args);
-    //   }
-    //
-    //   // return this.get(target, 'constructor', instance);
-    //   return response;
-    // },
+    construct(target, args) {
+      if (!Array.isArray(middleware)) {
+        throw new TypeError('Middleware stack must be an array!')
+      }
+
+      // let instance = target.prototype.apply(args); // TODO! use some sort of `apply`
+      // let instance = target.prototype.constructor.apply(target, args);
+
+      // let instance = Object.create(target.prototype);
+      // instance = target.apply(instance, args);
+
+      // let instance = Reflect.construct(target, args);
+      let response;
+
+      for (const transmutter of middleware) {
+        // if (typeof transmutter !== 'function') { // TODO! check if instanceof Transmutter/Middleware
+        //   throw new TypeError('Middleware must be composed of functions!')
+        // }
+
+        const method = transmutter[INSTANCE];
+        if (typeof method !== 'function') {
+          continue;
+        }
+
+        response = method(target, response, args);
+      }
+
+      if (!response) {
+        response = new target(...args)
+      }
+
+      // return this.get(target, 'constructor', instance);
+      return response;
+    },
     get(target, property, receiver) {
       if (!Array.isArray(middleware)) {
         throw new TypeError('Middleware stack must be an array!')

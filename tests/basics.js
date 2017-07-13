@@ -27,13 +27,12 @@ class Author extends Person {
   }
 }
 
-const { models } = new Domainer({
-  models: {
-    Person,
-    Author,
-  },
+const models = new Domainer({
+  Person,
+  Author,
 })
-.use(new IdentityTransmutter());
+.use(new IdentityTransmutter())
+.export;
 
 test('has accessors/getters pointing to the original fields', t => {
   const individual = new models.Person({
