@@ -28,7 +28,7 @@ function proxifier(middleware) {
           continue;
         }
 
-        response = method(target, response, args);
+        response = method.call(transmutter, target, response, args);
       }
 
       if (!response) {
@@ -54,7 +54,7 @@ function proxifier(middleware) {
 
         // resolve(original, { field }, context, info)
         // transmutter.get(target, refined, query, context);
-        response = method(target, property, response);
+        response = method.call(transmutter, target, property, response);
       }
 
       return response;
@@ -70,7 +70,7 @@ function proxifier(middleware) {
           continue;
         }
 
-        value = method(target, property, value);
+        value = method.call(transmutter, target, property, value);
       }
 
       return Reflect.set(target, property, value);

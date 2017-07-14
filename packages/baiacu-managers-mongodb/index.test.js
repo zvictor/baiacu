@@ -1,15 +1,25 @@
 import test from 'ava';
+import Domainer from 'baiacu';
 import { MongoClient } from 'mongodb';
+import { IdentityTransmutter } from 'baiacu/middleware';
 import Manager from './index';
 
 let connection;
-const collection = 'baiacu-managers-mongodb'
+let manager;
+let Model;
 
 // /////////////////////////////////////////////////////////////////////////////////////////////////
 // Hooks                                                                                          //
 // /////////////////////////////////////////////////////////////////////////////////////////////////
 test.before('mongodb should connect', async t => {
   connection = await MongoClient.connect('mongodb://localhost:27017/tests');
+  manager = new Manager({connection});
+  Model = new Domainer(class Model {
+    static collection = 'baiacu-managers-mongodb'
+  })
+    .use(new IdentityTransmutter())
+    .use(manager)
+    .export;
 });
 
 test.after('mongodb connection should be closed', async t => {
@@ -19,8 +29,11 @@ test.after('mongodb connection should be closed', async t => {
 // /////////////////////////////////////////////////////////////////////////////////////////////////
 // Tests                                                                                          //
 // /////////////////////////////////////////////////////////////////////////////////////////////////
-test.serial('manager should be able to find content', async t => {
-  const manager = new Manager({connection, collection});
+test('manager should select right collection', async t => {
+  t.is(Model.objects.collectionName, Model.collection);
+});
 
-  t.is(await manager.find(), []);
+test.serial('manager should be able to find content', async t => {
+  const content = await Model.objects.find().toArray();
+  t.is(content.length, 0);
 });
