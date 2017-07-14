@@ -1,11 +1,17 @@
 {
-  "name": "domainer",
-  "version": "2.0.0",
+  "name": "baiacu",
+  "version": "0.1.0",
   "description": "An Object Graph Mapper for GraphQL",
-  "main": "build/index.js",
+  "main": "build/",
   "files": [
-    "build"
+    "build/",
+    "core.js",
+    "middleware.js"
   ],
+  "directories": {
+    "lib": "./internals",
+    "example": "./examples"
+  },
   "keywords": [
     "graphql",
     "object",
@@ -16,7 +22,7 @@
   ],
   "scripts": {
     "lint": "eslint plugin",
-    "prepublish": "babel -d build/ internals/",
+    "prepublish": "rm -Rf ./build && babel -d build/ internals/",
     "test": "ava"
   },
   "repository": {

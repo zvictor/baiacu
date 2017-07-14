@@ -22,6 +22,9 @@
     ],
     "babel": "inherit"
   },
+  "dependencies": {
+    "baiacu": "^0.1.0"
+  },
   "devDependencies": {
     "mongodb": "^2.2.30"
   }

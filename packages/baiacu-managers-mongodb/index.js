@@ -1,5 +1,5 @@
 import Domainer from 'baiacu';
-import { IdentityTransmutter } from '../internals/middleware';
+import { IdentityTransmutter } from 'baiacu/middleware';
 import Connector from './manager';
 
 const Manager = new Domainer(Connector)

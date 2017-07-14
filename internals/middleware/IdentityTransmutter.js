@@ -1,4 +1,4 @@
-export default class IdentityTransmutter{
+export default class IdentityTransmutter {
   construct(source, property, response) {
     // if (response !== undefined) {
     //   throw new Error('IdentityTransmutter must be the first middleware to be executed');
