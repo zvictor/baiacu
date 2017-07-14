@@ -1,17 +1,17 @@
 export default class IdentityTransmutter{
-  class(source, property, response, proxy) {
+  construct(source, property, response) {
     // if (response !== undefined) {
     //   throw new Error('IdentityTransmutter must be the first middleware to be executed');
     // }
 
-    return Reflect.get(source, property, proxy);
+    return Reflect.get(source, property);
   }
 
   // instance(source, args, response) {
   //   proxy[property] = Reflect.construct(source, args);
   // }
 
-  attribute(source, property, response, proxy) {
-    return Reflect.get(source, property, proxy);
+  get(source, property, response) {
+    return Reflect.get(source, property);
   }
 }

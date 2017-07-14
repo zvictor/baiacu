@@ -1,6 +1,5 @@
 import isPlainObject from 'lodash.isplainobject';
 import proxyHandler from './proxy';
-import { CLASS, ATTRIBUTE } from './types';
 
 if (typeof Proxy === 'undefined') {
   throw new Error(`Domainer requires the Proxy object. Please consider using the 'proxy-polyfill' package.`)
@@ -27,14 +26,12 @@ export default class Domainer {
 
     if (!plain && isPlainObject(input)) {
       for (const name of Object.keys(input)) {
-        proxies[name] = new Proxy(input[name], proxyHandler(middleware, ATTRIBUTE));
+        proxies[name] = new Proxy(input[name], proxyHandler(middleware));
       }
 
-      this._store.output = new Proxy(proxies, proxyHandler(middleware, CLASS));
+      this._store.output = proxies;
     } else {
-      const internal = new Proxy(input, proxyHandler(middleware, ATTRIBUTE));
-      const external = new Proxy(internal, proxyHandler(middleware, CLASS));
-      this._store.output = external;
+      this._store.output = new Proxy(input, proxyHandler(middleware));
     }
   }
 

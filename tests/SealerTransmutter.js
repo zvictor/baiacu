@@ -5,8 +5,6 @@ import { IdentityTransmutter, SealerTransmutter } from '../internals/middleware'
 const A = 'A';
 const B = 'B';
 const C = 'C';
-const D = 'D';
-const E = 'E';
 
 test('models can be changed without the SealerTransmutter', t => {
   class Input {}
@@ -15,19 +13,15 @@ test('models can be changed without the SealerTransmutter', t => {
     .use(new IdentityTransmutter())
     .export;
 
-  const individual = new Output();
+  const instance = new Output();
 
   Input.A = A;
-  Input.prototype.B = B;
-  Output.C = C;
-  Output.prototype.D = D;
-  individual.E = E;
+  Output.B = B;
+  instance.C = C;
 
   t.is(Input.A, A);
-  t.is(Input.prototype.B, B);
-  t.is(Output.C, C);
-  t.is(Output.prototype.D, D);
-  t.is(individual.E, E);
+  t.is(Output.B, B);
+  t.is(instance.C, C);
 });
 
 test('plain classes cannot be changed with the SealerTransmutter', t => {
@@ -46,29 +40,21 @@ test('plain classes cannot be changed with the SealerTransmutter', t => {
     .use(new SealerTransmutter())
     .export;
 
-  const individual = new Output();
+  const instance = new Output();
 
-  t.is(Object.isFrozen(Input), true)
+  Input.A = A;
 
   t.throws(() => {
-    Input.A = A;
-  });
-  t.throws(() => {
-    Input.prototype.B = B;
-  });
-  t.throws(() => {
-    Output.C = C;
-  });
-  t.throws(() => {
-    Output.prototype.D = D;
+    Output.B = B;
   });
 
+  t.throws(() => {
+    instance.C = C;
+  });
 
-  t.not(Input.A, A);
-  // t.not(Input.prototype.B, B);
-  // t.not(Output.C, C);
-  // t.not(Output.prototype.D, D);
-  // t.not(individual.E, E);
+  t.is(Input.A, A);
+  t.is(Output.A, A);
+  t.not(Output.B, B);
 });
 
 test('domain classes cannot be changed with the SealerTransmutter', t => {
@@ -89,27 +75,21 @@ test('domain classes cannot be changed with the SealerTransmutter', t => {
     .use(new SealerTransmutter())
     .export;
 
-  const individual = new Output();
+  const instance = new Output();
+
+  Input.A = A;
 
   t.throws(() => {
-    Input.A = A;
-  });
-  t.throws(() => {
-    Input.prototype.B = B;
-  });
-  t.throws(() => {
-    Output.C = C;
-  });
-  t.throws(() => {
-    Output.prototype.D = D;
+    Output.B = B;
   });
 
+  t.throws(() => {
+    instance.C = C;
+  });
 
-  t.not(Input.A, A);
-  // t.not(Whatever.prototype.B, B);
-  // t.not(models.Whatever.C, C);
-  // t.not(models.Whatever.prototype.D, D);
-  // t.not(individual.E, E);
+  t.is(Input.A, A);
+  t.is(Output.A, A);
+  t.not(Output.B, B);
 });
 
 // test('merda cannot be changed with the SealerTransmutter', t => {
@@ -126,7 +106,7 @@ test('domain classes cannot be changed with the SealerTransmutter', t => {
 //     .use(new SealerTransmutter())
 //     .use(new Middleware());
 //
-//   const individual = new models.Whatever({
+//   const instance = new models.Whatever({
 //     firstName: 'George',
 //     lastName: 'Orwell',
 //   });
@@ -141,9 +121,9 @@ test('domain classes cannot be changed with the SealerTransmutter', t => {
 //   // });
 //   models.Whatever.C = C;
 //   models.Whatever.prototype.D = D;
-//   individual.E = E;
+//   instance.E = E;
 //
 //   t.is(models.Whatever.C, C);
 //   t.is(models.Whatever.prototype.D, D);
-//   t.is(individual.E, E);
+//   t.is(instance.E, E);
 // });

@@ -1,6 +1,4 @@
-import { INSTANCE } from '../core/types';
-
-export default (middleware, type) => {
+function proxifier(middleware) {
   if (!middleware) {
     throw new Error('missing `middleware`');
   }
@@ -25,7 +23,7 @@ export default (middleware, type) => {
         //   throw new TypeError('Middleware must be composed of functions!')
         // }
 
-        const method = transmutter[INSTANCE];
+        const method = transmutter.construct;
         if (typeof method !== 'function') {
           continue;
         }
@@ -34,7 +32,7 @@ export default (middleware, type) => {
       }
 
       if (!response) {
-        response = new target(...args)
+        response = new Proxy(new target(...args), proxifier(middleware));
       }
 
       // return this.get(target, 'constructor', instance);
@@ -45,46 +43,39 @@ export default (middleware, type) => {
         throw new TypeError('Middleware stack must be an array!')
       }
 
-      const proxy = {};
+      let response;
       // let response = Reflect.get(target, property, receiver);
-      // if (type === 'class') {
-      //   console.log({target});
-      //   console.log({property});
-      //   console.log({response});
-      //   console.log({manual: target[property]});
-      //   if(response !== target[property]) {
-      //     throw new Error(123)
-      //   }
-      //   console.log('________________');
-      // }
 
       for (const transmutter of middleware) {
-        // if (typeof transmutter !== 'function') { // TODO! check for instance of Transmutter/Middleware
-        //   throw new TypeError('Middleware must be composed of functions!')
-        // }
-
-        const method = transmutter[type];
+        const method = transmutter.get;
         if (typeof method !== 'function') {
           continue;
         }
 
         // resolve(original, { field }, context, info)
-        // transmutter[type](target, refined, query, context);
-        const response = method(target, property, proxy[property], proxy);
-        if (response !== undefined) {
-          proxy[property] = response;
-        }
+        // transmutter.get(target, refined, query, context);
+        response = method(target, property, response);
       }
 
-      return proxy[property];
+      return response;
     },
-    // apply() {
-    //   debugger
-    //   console.log({apply: arguments});
-    // },
-    // set() {
-    //   debugger
-    //   console.log({set: arguments});
-    // }
+    set(target, property, value) {
+      if (!Array.isArray(middleware)) {
+        throw new TypeError('Middleware stack must be an array!')
+      }
+
+      for (const transmutter of middleware) {
+        const method = transmutter.set;
+        if (typeof method !== 'function') {
+          continue;
+        }
+
+        value = method(target, property, value);
+      }
+
+      return Reflect.set(target, property, value);
+    },
   }
 };
+
+export default proxifier;
