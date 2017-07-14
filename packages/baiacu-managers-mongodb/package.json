@@ -22,7 +22,7 @@
     ],
     "babel": "inherit"
   },
-  "dependencies": {
+  "devDependencies": {
     "mongodb": "^2.2.30"
   }
 }

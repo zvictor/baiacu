@@ -1,6 +1,6 @@
 import test from 'ava';
 import { MongoClient } from 'mongodb';
-import Manager from './index';
+import Manager from './manager';
 
 let connection;
 const collection = 'baiacu-managers-mongodb'
@@ -19,8 +19,8 @@ test.after('mongodb connection should be closed', async t => {
 // /////////////////////////////////////////////////////////////////////////////////////////////////
 // Tests                                                                                          //
 // /////////////////////////////////////////////////////////////////////////////////////////////////
-test.serial('manager should be able to find content', async t => {
+test('manager should select right collection', async t => {
   const manager = new Manager({connection, collection});
 
-  t.is(await manager.find(), []);
+  t.is(manager.collection.collectionName, collection);
 });
