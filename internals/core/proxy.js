@@ -54,12 +54,12 @@ function proxifier(middleware) {
 
         // resolve(original, { field }, context, info)
         // transmutter.get(target, refined, query, context);
-        response = method.call(transmutter, target, property, response);
+        response = method.call(transmutter, target, property, response, receiver);
       }
 
       return response;
     },
-    set(target, property, value) {
+    set(target, property, value, receiver) {
       if (!Array.isArray(middleware)) {
         throw new TypeError('Middleware stack must be an array!')
       }
@@ -70,7 +70,7 @@ function proxifier(middleware) {
           continue;
         }
 
-        value = method.call(transmutter, target, property, value);
+        value = method.call(transmutter, target, property, value, receiver);
       }
 
       return Reflect.set(target, property, value);
