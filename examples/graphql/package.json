@@ -1,0 +1,33 @@
+{
+  "name": "baiacu-example-graphql",
+  "version": "1.0.0",
+  "description": "Example app for the baiacu library using graphql",
+  "main": "application.js",
+  "scripts": {
+    "start": "babel-node application.js",
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/baiacujs/baiacu.git"
+  },
+  "author": "Victor Duarte",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baiacujs/baiacu/issues"
+  },
+  "homepage": "https://github.com/baiacujs/baiacu#readme",
+  "ava": {
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
+  },
+  "dependencies": {
+    "baiacu": "^0.1.0",
+    "graphql": "^0.10.4"
+  },
+  "devDependencies": {
+    "promisify-node": "^0.4.0"
+  }
+}
